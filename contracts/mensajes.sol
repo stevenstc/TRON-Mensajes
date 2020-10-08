@@ -1,5 +1,13 @@
+/**
+ * Created on 2020-10-08 12:48
+ * @summary: 
+ * @author: Steven cabrera Londoño
+ */
 pragma solidity ^0.4.25;
 
+/**
+ * @title: Des Mensajes
+ */
 contract MensajeContract{
 
    struct Ms {
