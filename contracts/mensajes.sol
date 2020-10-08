@@ -9,26 +9,21 @@ contract MensajeContract{
    }
 
    Ms[] Mss;
-   mapping(address => uint) ownerToMs;
 
-   function addMs(string _mensaje,address _destinatario) public returns (bool){
+   function addMs(string _mensaje,address _destinatario) public {
        
-        address owner = _destinatario;
         address destino = msg.sender;
-        uint id = Mss.push(Ms(_mensaje, destino, _destinatario));
+        Mss.push(Ms(_mensaje, destino, _destinatario));
 
-       ownerToMs[owner]=id;
-       bool hecho = true;
-       return hecho;
    }
    
    function getMsMensaje(uint x) public view returns (string, uint, address, address){
-       address owner = msg.sender;
-       uint id = ownerToMs[owner];
-       if (Mss[id-x].destinatario == owner){
-            return (Mss[id-x].mensaje , id, Mss[id-x].remitente, Mss[id-x].destinatario);
+       
+       uint id = Mss.length;
+       if (Mss[x].destinatario == msg.sender || Mss[x].remitente == msg.sender){
+            return (Mss[x].mensaje , id, Mss[x].remitente, Mss[x].destinatario);
        }else{
-           return ("nada por aqui" , id, owner, owner);
+            return ("nada por aqui" , id, msg.sender, msg.sender);
        }
 
    }
