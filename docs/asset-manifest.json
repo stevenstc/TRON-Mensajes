@@ -1,23 +1,23 @@
 {
   "files": {
-    "main.css": "/DesMensajes/static/css/main.d2d6fd33.chunk.css",
-    "main.js": "/DesMensajes/static/js/main.6e8a4b2a.chunk.js",
-    "main.js.map": "/DesMensajes/static/js/main.6e8a4b2a.chunk.js.map",
-    "runtime-main.js": "/DesMensajes/static/js/runtime-main.3375e183.js",
-    "runtime-main.js.map": "/DesMensajes/static/js/runtime-main.3375e183.js.map",
-    "static/js/2.8eeb56f0.chunk.js": "/DesMensajes/static/js/2.8eeb56f0.chunk.js",
-    "static/js/2.8eeb56f0.chunk.js.map": "/DesMensajes/static/js/2.8eeb56f0.chunk.js.map",
-    "index.html": "/DesMensajes/index.html",
-    "precache-manifest.018f505c6814e4a78df3aeb9e329eba1.js": "/DesMensajes/precache-manifest.018f505c6814e4a78df3aeb9e329eba1.js",
-    "service-worker.js": "/DesMensajes/service-worker.js",
-    "static/css/main.d2d6fd33.chunk.css.map": "/DesMensajes/static/css/main.d2d6fd33.chunk.css.map",
-    "static/js/2.8eeb56f0.chunk.js.LICENSE.txt": "/DesMensajes/static/js/2.8eeb56f0.chunk.js.LICENSE.txt",
-    "static/media/TronLinkLogo.png": "/DesMensajes/static/media/TronLinkLogo.d3a8f115.png"
+    "main.css": "/Dapp-Mensajes/static/css/main.d2d6fd33.chunk.css",
+    "main.js": "/Dapp-Mensajes/static/js/main.e5638d39.chunk.js",
+    "main.js.map": "/Dapp-Mensajes/static/js/main.e5638d39.chunk.js.map",
+    "runtime-main.js": "/Dapp-Mensajes/static/js/runtime-main.2d7af246.js",
+    "runtime-main.js.map": "/Dapp-Mensajes/static/js/runtime-main.2d7af246.js.map",
+    "static/js/2.a9f8dfcf.chunk.js": "/Dapp-Mensajes/static/js/2.a9f8dfcf.chunk.js",
+    "static/js/2.a9f8dfcf.chunk.js.map": "/Dapp-Mensajes/static/js/2.a9f8dfcf.chunk.js.map",
+    "index.html": "/Dapp-Mensajes/index.html",
+    "precache-manifest.bf683c6e65c46a432666a69e723d940c.js": "/Dapp-Mensajes/precache-manifest.bf683c6e65c46a432666a69e723d940c.js",
+    "service-worker.js": "/Dapp-Mensajes/service-worker.js",
+    "static/css/main.d2d6fd33.chunk.css.map": "/Dapp-Mensajes/static/css/main.d2d6fd33.chunk.css.map",
+    "static/js/2.a9f8dfcf.chunk.js.LICENSE.txt": "/Dapp-Mensajes/static/js/2.a9f8dfcf.chunk.js.LICENSE.txt",
+    "static/media/TronLinkLogo.png": "/Dapp-Mensajes/static/media/TronLinkLogo.d3a8f115.png"
   },
   "entrypoints": [
-    "static/js/runtime-main.3375e183.js",
-    "static/js/2.8eeb56f0.chunk.js",
+    "static/js/runtime-main.2d7af246.js",
+    "static/js/2.a9f8dfcf.chunk.js",
     "static/css/main.d2d6fd33.chunk.css",
-    "static/js/main.6e8a4b2a.chunk.js"
+    "static/js/main.e5638d39.chunk.js"
   ]
 }
