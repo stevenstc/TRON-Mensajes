@@ -18,12 +18,17 @@ export default class MensajeContract extends Component {
 
     this.addMs = this.addMs.bind(this);
     this.getMsMensaje = this.getMsMensaje.bind(this);
+    this.adress = this.adress.bind(this);
   }
-
 
   async componentDidMount() {
     await Utils.setContract(window.tronWeb, contractAddress);
-  }
+  };
+
+  adress(valor){
+    document.getElementById('direccion').value = valor;
+    document.getElementById('mensaje').focus();
+  };
 
   async getMsMensaje() {
     const { allMs } = this.state;
@@ -44,7 +49,7 @@ export default class MensajeContract extends Component {
         if (window.tronWeb.address.fromHex(ms2[2]) === accountAddress) {
             let notif = (
               <div className="alert alert-primary" role="alert">
-                <div className="mb-2 text-muted">Para: {window.tronWeb.address.fromHex(ms2[3])}</div>
+                <div className="mb-2 text-muted">Para: <span><button type="button" className="btn btn-light" onClick={() => this.adress(window.tronWeb.address.fromHex(ms2[3]))}>{window.tronWeb.address.fromHex(ms2[3])}</button></span></div>
                 <hr></hr>
                 <div className="font-weight-bold">{ms2[0]}</div>
               </div>
@@ -53,7 +58,7 @@ export default class MensajeContract extends Component {
           }else{
             let notif = (
               <div className="alert alert-secondary" role="alert">
-                <div className="mb-2 text-muted">Responder: {window.tronWeb.address.fromHex(ms2[2])}</div>
+                <div className="mb-2 text-muted">Responder: <span><button type="button" className="btn btn-success" onClick={() => this.adress(window.tronWeb.address.fromHex(ms2[2]))}>{window.tronWeb.address.fromHex(ms2[2])}</button></span></div>
                 <hr></hr>
                 <div className="font-weight-bold">{ms2[0]}</div>
               </div>
@@ -81,30 +86,39 @@ export default class MensajeContract extends Component {
             </div>
           );
     allMs.splice(0,0,notif);
+    document.getElementById("mensaje").value = "";
+    document.getElementById("direccion").value = "";
     return Utils.contract.addMs(mensaje, destinatario).send();
     
-  }
+  };
 
   render() {
     const { allMs } = this.state;
-
     return (
       
       <div className="eCommerce-component-container">
         
         <form action="" className="alert alert-success">
-          <input type="text" name="mensaje" id="mensaje" placeholder="Escribe tu mensaje"></input>
-          <input type="text" name="direccion" id="direccion" placeholder="TB7RTxBPY4eMvKjceXj8SWjVnZCrWr4XvF"></input>
-          <button type="button" onClick={() => this.addMs()}>Enviar</button>
+          <div className="form-group">
+            <label for="exampleFormControlTextarea1">Dirección</label>
+            <textarea className="form-control" id="direccion" rows="1" placeholder="TB7.......r4XvF"></textarea>
+          </div>
+          <div className="form-group">
+            <label for="exampleFormControlTextarea2">Escribe tu mensaje</label>
+            <textarea className="form-control" id="mensaje" rows="3" placeholder="Escribe tu mensaje"></textarea>
+          </div>
+          <div className="form-group">
+            <button className="btn btn-success" type="button" onClick={() => this.addMs()}>Enviar</button>
+             Costo aproximado: 106420 Energía + 412 Ancho de Banda
+          </div>
         </form>
+
         <div className="eCommerce-item-container">
           <button className="btn btn-primary" onClick={() => this.getMsMensaje()}>Ver mis Mensajes</button>
           <hr></hr>
-          <hr></hr>
         </div>
         <div className="eCommerce-item-container">{allMs}</div>
-        
-        
+
       </div> 
 
     );
