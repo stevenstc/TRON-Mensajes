@@ -1,5 +1,7 @@
 ## TRON Dapp-Mensajes
 
+Nota: para visualizar la demo debes activar el nodo de pruebas de la red de TRON llamado Shasta
+
 [Online Demo](https://stevenstc.github.io/Dapp-Mensajes/)
 
 Es una Dapp construida en TRON. es un ejemplo de como se podria enviar y recibir mensajes por internet sin necesidad de tener una aplicacion centralizada
