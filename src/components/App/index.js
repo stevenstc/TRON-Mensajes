@@ -5,7 +5,6 @@ import Utils from "../../utils";
 import ECommerce from "../ECommerce"; 
 import TronLinkInfo from "../TronLinkInfo";
 import TronLinkGuide from "../TronLinkGuide";
-import "./App.scss";
 
 const FOUNDATION_ADDRESS = "TWiWt5SEDzaEqS6kE5gandWMNfxR2B5xzg";
 

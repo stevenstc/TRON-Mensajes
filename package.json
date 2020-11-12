@@ -1,5 +1,5 @@
 {
-  "name": "Des-Mensajes",
+  "name": "TRON-Mensajes",
   "version": "1.0.0",
   "description": "Es la aplicacion para enviar mensajes en la Blockchcain tron",
   "main": "tronbox.js",
@@ -15,14 +15,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/stevenstc/DesMensajes.git"
+    "url": "git+https://github.com/stevenstc/TRON-Mensajes.git"
   },
   "author": "Steven CL",
   "license": "Apache 2.0",
   "bugs": {
-    "url": "https://github.com/stevenstc/DesMensajes/issues"
+    "url": "https://github.com/stevenstc/TRON-Mensajes/issues"
   },
-  "homepage": "https://stevenstc.github.io/DesMensajes/",
+  "homepage": "https://stevenstc.github.io/TRON-Mensajes/",
   "dependencies": {
     "@babel/core": "7.8.4",
     "@svgr/webpack": "4.3.3",

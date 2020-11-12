@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import Utils from "../../utils";
-import "./ECommerce.scss";
-//import TronLinkInfo from "../TronLinkInfo";
+
 
 /// La direccion de su contrato acá ///////////////////////////////////
 const contractAddress = "TE2Yndwa6HBeqoPscrYfyZnV3gQEdhRLeq";
