@@ -1,23 +1,20 @@
 {
   "files": {
-    "main.css": "/Dapp-Mensajes/static/css/main.d2d6fd33.chunk.css",
-    "main.js": "/Dapp-Mensajes/static/js/main.e5638d39.chunk.js",
-    "main.js.map": "/Dapp-Mensajes/static/js/main.e5638d39.chunk.js.map",
-    "runtime-main.js": "/Dapp-Mensajes/static/js/runtime-main.2d7af246.js",
-    "runtime-main.js.map": "/Dapp-Mensajes/static/js/runtime-main.2d7af246.js.map",
-    "static/js/2.a9f8dfcf.chunk.js": "/Dapp-Mensajes/static/js/2.a9f8dfcf.chunk.js",
-    "static/js/2.a9f8dfcf.chunk.js.map": "/Dapp-Mensajes/static/js/2.a9f8dfcf.chunk.js.map",
-    "index.html": "/Dapp-Mensajes/index.html",
-    "precache-manifest.bf683c6e65c46a432666a69e723d940c.js": "/Dapp-Mensajes/precache-manifest.bf683c6e65c46a432666a69e723d940c.js",
-    "service-worker.js": "/Dapp-Mensajes/service-worker.js",
-    "static/css/main.d2d6fd33.chunk.css.map": "/Dapp-Mensajes/static/css/main.d2d6fd33.chunk.css.map",
-    "static/js/2.a9f8dfcf.chunk.js.LICENSE.txt": "/Dapp-Mensajes/static/js/2.a9f8dfcf.chunk.js.LICENSE.txt",
-    "static/media/TronLinkLogo.png": "/Dapp-Mensajes/static/media/TronLinkLogo.d3a8f115.png"
+    "main.js": "/TRON-Mensajes/static/js/main.f047f7d6.chunk.js",
+    "main.js.map": "/TRON-Mensajes/static/js/main.f047f7d6.chunk.js.map",
+    "runtime-main.js": "/TRON-Mensajes/static/js/runtime-main.d228b1bd.js",
+    "runtime-main.js.map": "/TRON-Mensajes/static/js/runtime-main.d228b1bd.js.map",
+    "static/js/2.bf097f37.chunk.js": "/TRON-Mensajes/static/js/2.bf097f37.chunk.js",
+    "static/js/2.bf097f37.chunk.js.map": "/TRON-Mensajes/static/js/2.bf097f37.chunk.js.map",
+    "index.html": "/TRON-Mensajes/index.html",
+    "precache-manifest.ffc5b6482d9dbd3ece98170b939e5cac.js": "/TRON-Mensajes/precache-manifest.ffc5b6482d9dbd3ece98170b939e5cac.js",
+    "service-worker.js": "/TRON-Mensajes/service-worker.js",
+    "static/js/2.bf097f37.chunk.js.LICENSE.txt": "/TRON-Mensajes/static/js/2.bf097f37.chunk.js.LICENSE.txt",
+    "static/media/TronLinkLogo.png": "/TRON-Mensajes/static/media/TronLinkLogo.d3a8f115.png"
   },
   "entrypoints": [
-    "static/js/runtime-main.2d7af246.js",
-    "static/js/2.a9f8dfcf.chunk.js",
-    "static/css/main.d2d6fd33.chunk.css",
-    "static/js/main.e5638d39.chunk.js"
+    "static/js/runtime-main.d228b1bd.js",
+    "static/js/2.bf097f37.chunk.js",
+    "static/js/main.f047f7d6.chunk.js"
   ]
 }
