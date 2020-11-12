@@ -1,8 +1,8 @@
-## TRON Dapp-Mensajes
+## TRON-Mensajes
 
 Nota: para visualizar la demo debes activar el nodo de pruebas de la red de TRON llamado Shasta
 
-[Online Demo](https://stevenstc.github.io/Dapp-Mensajes/)
+[Online Demo](https://stevenstc.github.io/TRON-Mensajes/)
 
 ![contract-migration](./TUTORIAL/tron/shasta-network.gif)
 
