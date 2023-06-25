@@ -1,8 +1,7 @@
 {
-  "name": "TRON-Mensajes",
+  "name": "tron-mensajes",
   "version": "1.0.0",
   "description": "Es la aplicacion para enviar mensajes en la Blockchcain tron",
-  "main": "tronbox.js",
   "directories": {
     "test": "test"
   },
