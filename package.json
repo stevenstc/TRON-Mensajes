@@ -8,7 +8,6 @@
   "scripts": {
     "start": "node scripts/start.js",
     "build": "node scripts/build.js && npx rimraf docs && npx move-cli build docs",
-    "test": "node scripts/test.js",
     "predeploy": "npm run build",
     "deploy": "gh-pages - build"
   },
@@ -36,7 +35,6 @@
     "case-sensitive-paths-webpack-plugin": "2.3.0",
     "css-loader": "3.4.2",
     "dotenv": "8.2.0",
-    "dotenv-expand": "5.1.0",
     "eslint": "^6.6.0",
     "eslint-config-react-app": "^5.2.1",
     "eslint-loader": "3.0.3",
@@ -54,7 +52,6 @@
     "jest-resolve": "24.9.0",
     "jest-watch-typeahead": "0.4.2",
     "mini-css-extract-plugin": "0.9.0",
-    "node-sass": "^7.0.0",
     "optimize-css-assets-webpack-plugin": "5.0.3",
     "pnp-webpack-plugin": "1.6.0",
     "postcss-flexbugs-fixes": "4.1.0",
@@ -86,8 +83,7 @@
     "babel-polyfill": "^6.26.0",
     "babel-register": "^6.26.0",
     "move-cli": "^1.2.1",
-    "rimraf": "^2.7.1",
-    "solc": "^0.5.17"
+    "rimraf": "^2.7.1"
   },
   "browserslist": [
     ">0.2%",
