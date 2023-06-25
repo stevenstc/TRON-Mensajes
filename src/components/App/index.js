@@ -105,50 +105,7 @@ class App extends Component {
 
     return (
       <div>
-        <header className="header-container">
-          <div className="resource-links-container">
-            <div className="app-title">TRX-Mensajes (Mensajes descentralizados)</div>
-            <a
-              className=""
-              href="https://developers.tron.network/docs"
-              rel="noopener noreferrer"
-              target="_blank"
-            >
-              Guías
-            </a>
-            &nbsp; - &nbsp;
-            <a
-              className=""
-              href="https://developers.tron.network/docs"
-              rel="noopener noreferrer"
-              target="_blank"
-            >
-              API Reference
-            </a>
-             &nbsp; - &nbsp;
-            <a
-              className=""
-              href="https://tronscan.org/#/"
-              rel="noopener noreferrer"
-              target="_blank"
-            >
-              TronScan
-            </a>
-             &nbsp; - &nbsp;
-            <a
-              className=""
-              href="https://tronstation.io/"
-              rel="noopener noreferrer"
-              target="_blank"
-            >
-              TronStation
-            </a>
-          </div>
-          <TronLinkInfo />
-        </header>
-        <div>
           <ECommerce />
-        </div>
       </div>
     );
   }
