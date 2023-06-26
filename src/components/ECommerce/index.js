@@ -1,12 +1,6 @@
 import React, { Component } from "react";
 import Utils from "../../utils";
 
-
-/// La direccion de su contrato acá ///////////////////////////////////
-const contractAddress = "TE2Yndwa6HBeqoPscrYfyZnV3gQEdhRLeq"; //shashta
-// base85v = "TE2Yndwa6HBeqoPscrYfyZnV3gQEdhRLeq"
-///////////////////////////////////////////////////////////////////////
-
 export default class MensajeContract extends Component {
   constructor(props) {
     super(props);
@@ -18,10 +12,14 @@ export default class MensajeContract extends Component {
     this.addMs = this.addMs.bind(this);
     this.getMsMensaje = this.getMsMensaje.bind(this);
     this.adress = this.adress.bind(this);
+    this.fetchAccountAddress = this.fetchAccountAddress.bind(this);
   }
 
   async componentDidMount() {
-    await Utils.setContract(window.tronWeb, contractAddress);
+    setTimeout(() => {
+      this.getMsMensaje();
+    }, 4 * 1000);
+    this.fetchAccountAddress();
   };
 
   adress(valor) {
@@ -30,50 +28,59 @@ export default class MensajeContract extends Component {
   };
 
   async getMsMensaje() {
-    const { allMs } = this.state;
 
-    let ms = await Utils.contract.getMsMensaje(0).call();
+    function sinjQuery()
+{
+  
+    var objDiv = document.getElementById("divu");
+    objDiv.scrollTop = objDiv.scrollHeight;
+}
+
+    let ms = await this.props.contrato.MSG.getMsMensaje(0).call();
     let totalMs = parseInt(ms[1]._hex);
-    let i = 0;
 
-    allMs.splice(0);
+    let allMs = []
 
-    while (i <= totalMs) {
-      let ms2 = await Utils.contract.getMsMensaje(i).call();
-      let account = await window.tronWeb.trx.getAccount();
-      let accountAddress = account.address;
-      accountAddress = window.tronWeb.address.fromHex(accountAddress);
+    for (let i = 0; i < totalMs; i++) {
+      let ms2 = await this.props.contrato.MSG.getMsMensaje(i).call();
 
       if (ms2[0] !== "nada por aqui") {
-        if (window.tronWeb.address.fromHex(ms2[2]) === accountAddress) {
-          let notif = (
-            <div class="media w-50 ml-auto mb-3">
-                  <div class="media-body">
-                    <div class="bg-primary rounded py-2 px-3 mb-2">
-                      <p class="text-small mb-0 text-white">{ms2[0]}</p>
+        if (window.tronWeb.address.fromHex(ms2[2]) === this.props.accountAddress) {
+          allMs.push (
+            <div className="media w-50 ml-auto mb-3" key={"unechat-"+i}>
+                  <div className="media-body">
+                    <div className="bg-primary rounded py-2 px-3 mb-2">
+                      <p className="text-small mb-0 text-white">{ms2[0]}</p>
                     </div>
                   </div>
                 </div>
           );
-          allMs.splice(0, 0, notif);
         } else {
-          let notif = (
-            <div class="media w-50 mb-3"><img src="https://bootstrapious.com/i/snippets/sn-chat/avatar.svg" alt="user" width="50" class="rounded-circle" />
-                  <div class="media-body ml-3">
-                    <p class="small text-muted">{window.tronWeb.address.fromHex(ms2[2])}</p>
-                    <div class="bg-light rounded py-2 px-3 mb-2">
-                      <p class="text-small mb-0 text-muted">{ms2[0]}</p>
+          allMs.push (
+            <div className="media w-50 mb-3" key={"unechatAns-"+i}><img src="https://bootstrapious.com/i/snippets/sn-chat/avatar.svg" alt="user" width="50" className="rounded-circle" />
+                  <div className="media-body ml-3">
+                    <p className="small text-muted">{window.tronWeb.address.fromHex(ms2[2])}</p>
+                    <div className="bg-light rounded py-2 px-3 mb-2">
+                      <p className="text-small mb-0 text-muted">{ms2[0]}</p>
                     </div>
                   </div>
                 </div>
           );
-          allMs.splice(0, 0, notif);
         }
 
       }
 
-      i++;
+      await this.setState({
+        allMs: allMs
+      })
+
+      var objDiv = document.getElementById("divu");
+      objDiv.scrollTop = objDiv.scrollHeight;
+      
     }
+
+    
+
   };
 
 
@@ -92,43 +99,55 @@ export default class MensajeContract extends Component {
     allMs.splice(0, 0, notif);
     document.getElementById("mensaje").value = "";
     document.getElementById("direccion").value = "";
-    return Utils.contract.addMs(mensaje, destinatario).send();
+    return this.props.contrato.MSG.addMs(mensaje, destinatario).send();
 
   };
+
+  async fetchAccountAddress() {
+    const account = await window.tronWeb.trx.getAccount();
+    const accountAddress = account.address; // HexString(Ascii)
+     const accountAddressInBase58 = window.tronWeb.address.fromHex(
+       accountAddress
+     ); // Base58
+
+    this.setState({
+      accountAddress: accountAddressInBase58
+    });
+  }
 
   render() {
     const { allMs } = this.state;
     return (
       <>
-        <div class="container py-5 px-4">
+        <div className="container py-5 px-4">
 
-          <header class="text-center">
-            <h1 class="display-4 text-white">TRON Chat</h1>
-            <p class="text-white lead mb-0">Chatea de forma descentralizada</p>
-            <p class="text-white lead mb-4">Snippet by
-              <a href="https://bootstrapious.com" class="text-white">
-                <u>Bootstrapious</u></a>
+          <header className="text-center">
+            <h1 className="display-4 text-white">TRON Chat</h1>
+            <p className="text-white lead mb-0">Chatea de forma descentralizada</p>
+            <p className="text-white lead mb-4">by
+              <a href="https://brutus.finance" className="text-white">
+                <u>brutus.finance</u></a>
             </p>
           </header>
 
-          <div class="row rounded-lg overflow-hidden shadow">
+          <div className="row rounded-lg overflow-hidden shadow">
 
-            <div class="col-5 px-0">
-              <div class="bg-white">
+            <div className="col-5 px-0">
+              <div className="bg-white">
 
-                <div class="bg-gray px-4 py-2 bg-light">
-                  <p class="h5 mb-0 py-1">Recent</p>
+                <div className="bg-gray px-4 py-2 bg-light">
+                  <p className="h5 mb-0 py-1">{this.state.accountAddress}</p>
                 </div>
 
-                <div class="messages-box">
-                  <div class="list-group rounded-0">
-                    <a class="list-group-item list-group-item-action active text-white rounded-0">
-                      <div class="media"><img src="https://bootstrapious.com/i/snippets/sn-chat/avatar.svg" alt="user" width="50" class="rounded-circle" />
-                        <div class="media-body ml-4">
-                          <div class="d-flex align-items-center justify-content-between mb-1">
-                            <h6 class="mb-0">Jason Doe</h6><small class="small font-weight-bold">25 Dec</small>
+                <div className="messages-box">
+                  <div className="list-group rounded-0">
+                    <a className="list-group-item list-group-item-action active text-white rounded-0">
+                      <div className="media"><img src="https://bootstrapious.com/i/snippets/sn-chat/avatar.svg" alt="user" width="50" className="rounded-circle" />
+                        <div className="media-body ml-4">
+                          <div className="d-flex align-items-center justify-content-between mb-1">
+                            <h6 className="mb-0">Jason Doe</h6><small className="small font-weight-bold">25 Dec</small>
                           </div>
-                          <p class="font-italic mb-0 text-small">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore.</p>
+                          <p className="font-italic mb-0 text-small">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore.</p>
                         </div>
                       </div>
                     </a>
@@ -141,19 +160,19 @@ export default class MensajeContract extends Component {
             </div>
 
 
-            <div class="col-7 px-0">
-              <div class="px-4 py-5 chat-box bg-white">
+            <div className="col-7 px-0">
+              <div id="divu" className="px-4 py-5 chat-box bg-white">
 
                 {allMs}
 
               </div>
 
 
-              <form action="#" class="bg-light">
-                <div class="input-group">
-                  <input type="text" placeholder="Type a message"  id="mensaje" aria-describedby="button-addon2" class="form-control rounded-0 border-0 py-4 bg-light" />
-                  <div class="input-group-append">
-                    <button id="button-addon2" type="submit" class="btn btn-link" onClick={() => this.addMs()}> <i class="fa fa-paper-plane"></i></button>
+              <form action="#" className="bg-light">
+                <div className="input-group">
+                  <input type="text" placeholder="Type a message"  id="mensaje" aria-describedby="button-addon2" className="form-control rounded-0 border-0 py-4 bg-light" />
+                  <div className="input-group-append">
+                    <button id="button-addon2" type="submit" className="btn btn-link" onClick={() => this.addMs()}> <i className="fa fa-paper-plane"></i></button>
                   </div>
                 </div>
               </form>
@@ -168,7 +187,7 @@ export default class MensajeContract extends Component {
 
           <form action="" className="alert alert-success">
             <div className="form-group">
-              <label for="exampleFormControlTextarea1">Dirección</label>
+              <label htmlFor="exampleFormControlTextarea1">Dirección</label>
               <textarea className="form-control" id="direccion" rows="1" placeholder="TB7.......r4XvF"></textarea>
             </div>
             <div className="form-group">
