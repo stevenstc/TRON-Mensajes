@@ -1,7 +1,4 @@
 /**
- * Created on 2020-10-08 12:48
- * @summary: 
- * @author: Steven cabrera Londoño
  * SPDX-License-Identifier: Apache-2.0
  */
 pragma solidity ^0.8.17;
@@ -13,11 +10,16 @@ contract MensajeContract{
        address remitente;
      }
 
-     mapping(uint256=>address)identificador;
-     mapping(address=>bytes32[])misChats;
+     mapping(uint256=>address)public identificador;
+     mapping(address=>bytes32[])_misChats;
      mapping(bytes32=>Mensaje[])chats;
-     mapping(bytes32=>bool)chatActivos;
-     mapping(bytes32=>address[])lista;
+     mapping(bytes32=>string) public chatName;
+     mapping(bytes32=>bool)public chatActivo;
+     mapping(bytes32=>address[])public lista;
+     
+     function misChats(address _user)public view returns(bytes32[] memory){
+         return _misChats[_user];
+     }
 
      function isListing(address _user, bytes32 _chat) public view returns(bool permiso){
           permiso = true;
@@ -32,32 +34,66 @@ contract MensajeContract{
      }
 
      function joinChat(bytes32 _chat) public {
-          require(chatActivos[_chat]); 
-          misChats[msg.sender].push(_chat);
+          require(chatActivo[_chat]); 
+          require(isListing(msg.sender,_chat));
+          _misChats[msg.sender].push(_chat);
 
      }
 
-     function createChat(bool _privado, address[] memory _lista)public  returns(bytes32) {
+     function inviteUserChat(address _user,bytes32 _chat) public{
+          require(chatActivo[_chat]); 
+          require(isListing(msg.sender,_chat));
+          lista[_chat][0] = msg.sender;
+          lista[_chat].push(_user);
+     }
+     
+     function deleteChat(uint256 _index) public {
+          delete _misChats[msg.sender][_index];
 
-        bytes32 chatName = keccak256(abi.encodePacked(msg.sender,block.timestamp));
-        chatActivos[chatName] = true;
-        if(_privado){
-            lista[chatName] = _lista;
+     }
+
+     function createChat(address[] memory _lista)public  returns(bytes32) {
+
+        bytes32 chatN = keccak256(abi.encodePacked(msg.sender,block.timestamp));
+        chatActivo[chatN] = true;
+        lista[chatN].push(msg.sender);
+        if(_lista.length>1){
+            for (uint256 index = 0; index < _lista.length; index++) {
+                lista[chatN].push(_lista[index]);
+            }
+            
         }
-        return chatName;
+        _misChats[msg.sender].push(chatN);
+        return chatN;
 
+     }
+     
+     function deactiveChat(bytes32 _chat)public {
+
+        require(isListing(msg.sender,_chat));
+        lista[_chat][0] = msg.sender;
+        chatActivo[_chat] = false;
+        
+
+     }
+
+     function updateChatName(string memory _nombre,bytes32 _chat) public{
+          require(chatActivo[_chat]); 
+          require(isListing(msg.sender,_chat));
+          lista[_chat][0] = msg.sender;
+          chatName[_chat] = _nombre;
      }
 
      function sendMsg(string memory _mensaje,bytes32 _chat) public {
-        require(chatActivos[_chat]); 
+        require(chatActivo[_chat]); 
         require(isListing(msg.sender,_chat));
 
         chats[_chat].push(Mensaje(_mensaje,msg.sender));
         
      }
    
-     function getChats(bytes32 _chat) public view returns (Mensaje[] memory mss){
-       require(chatActivos[_chat]); 
+     function getMsgChats(bytes32 _chat) public view returns (Mensaje[] memory){
+       require(chatActivo[_chat]); 
        require(isListing(msg.sender,_chat));
 
        return chats[_chat];

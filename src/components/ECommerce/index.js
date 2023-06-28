@@ -1,17 +1,17 @@
 import React, { Component } from "react";
-import Utils from "../../utils";
 
 export default class MensajeContract extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      allMs: []
+      allMs: [],
+      allChats: [],
+      selectedChat: ""
     };
 
     this.addMs = this.addMs.bind(this);
     this.getMsMensaje = this.getMsMensaje.bind(this);
-    this.adress = this.adress.bind(this);
     this.fetchAccountAddress = this.fetchAccountAddress.bind(this);
   }
 
@@ -22,53 +22,78 @@ export default class MensajeContract extends Component {
     this.fetchAccountAddress();
   };
 
-  adress(valor) {
-    document.getElementById('direccion').value = valor;
-    document.getElementById('mensaje').focus();
-  };
-
   async getMsMensaje() {
 
-    function sinjQuery()
-{
-  
-    var objDiv = document.getElementById("divu");
-    objDiv.scrollTop = objDiv.scrollHeight;
-}
+    let ms = await this.props.contrato.MSG.misChats(this.props.accountAddress).call();
 
-    let ms = await this.props.contrato.MSG.getMsMensaje(0).call();
-    let totalMs = parseInt(ms[1]._hex);
+    let allChats = []
+
+    allChats.push(
+      <a href={"#createChat"} className="list-group-item list-group-item-action rounded-0">
+        <div className="media"><img src="https://picsum.photos/50?random=999" alt="user" width="50" className="rounded-circle" />
+          <div className="media-body ml-4">
+            <div className="d-flex align-items-center justify-content-between mb-1">
+              <h6 className="mb-0">Create Chat</h6>
+            </div>
+            <p className="font-italic mb-0 text-small">{'["adress","adress"]'}</p>
+          </div>
+        </div>
+      </a>
+    )
+
+    for (let index = 0; index < ms.length; index++) {
+      allChats.push(
+        <a href={"#"+ms[index]} className="list-group-item list-group-item-action active text-white rounded-0">
+          <div className="media"><img src={"https://picsum.photos/50?random="+index} alt="user" width="50" className="rounded-circle" />
+            <div className="media-body ml-4">
+              <div className="d-flex align-items-center justify-content-between mb-1">
+                <h6 className="mb-0">Chat name</h6>
+              </div>
+              <p className="font-italic mb-0 text-small">{ms[index]}</p>
+            </div>
+          </div>
+        </a>
+      )
+
+    }
+
+    await this.setState({
+      allChats: allChats
+    })
+
+    let array = []
+    if(ms.length>=1){
+      array = await this.props.contrato.MSG.getMsgChats(ms[0]).call();
+
+    }
 
     let allMs = []
 
-    for (let i = 0; i < totalMs; i++) {
-      let ms2 = await this.props.contrato.MSG.getMsMensaje(i).call();
+    for (let i = 0; i < array.length; i++) {
 
-      if (ms2[0] !== "nada por aqui") {
-        if (window.tronWeb.address.fromHex(ms2[2]) === this.props.accountAddress) {
-          allMs.push (
-            <div className="media w-50 ml-auto mb-3" key={"unechat-"+i}>
-                  <div className="media-body">
-                    <div className="bg-primary rounded py-2 px-3 mb-2">
-                      <p className="text-small mb-0 text-white">{ms2[0]}</p>
-                    </div>
-                  </div>
-                </div>
-          );
-        } else {
-          allMs.push (
-            <div className="media w-50 mb-3" key={"unechatAns-"+i}><img src="https://bootstrapious.com/i/snippets/sn-chat/avatar.svg" alt="user" width="50" className="rounded-circle" />
-                  <div className="media-body ml-3">
-                    <p className="small text-muted">{window.tronWeb.address.fromHex(ms2[2])}</p>
-                    <div className="bg-light rounded py-2 px-3 mb-2">
-                      <p className="text-small mb-0 text-muted">{ms2[0]}</p>
-                    </div>
-                  </div>
-                </div>
-          );
-        }
-
+      if (window.tronWeb.address.fromHex(array[i][1]) === this.props.accountAddress) {
+        allMs.push(
+          <div className="media w-50 ml-auto mb-3" key={"unechat-" + i}>
+            <div className="media-body">
+              <div className="bg-primary rounded py-2 px-3 mb-2">
+                <p className="text-small mb-0 text-white">{array[i][0]}</p>
+              </div>
+            </div>
+          </div>
+        );
+      } else {
+        allMs.push(
+          <div className="media w-50 mb-3" key={"unechatAns-" + i}><img src={"https://picsum.photos/50?random="+i} alt="user" width="50" className="rounded-circle" />
+            <div className="media-body ml-3">
+              <p className="small text-muted">{window.tronWeb.address.fromHex(array[i][1])}</p>
+              <div className="bg-light rounded py-2 px-3 mb-2">
+                <p className="text-small mb-0 text-muted">{array[i][0]}</p>
+              </div>
+            </div>
+          </div>
+        );
       }
+
 
       await this.setState({
         allMs: allMs
@@ -76,7 +101,7 @@ export default class MensajeContract extends Component {
 
       var objDiv = document.getElementById("divu");
       objDiv.scrollTop = objDiv.scrollHeight;
-      
+
     }
 
     
@@ -85,30 +110,43 @@ export default class MensajeContract extends Component {
 
 
   async addMs() {
-    const { allMs } = this.state;
+    var { allMs } = this.state;
 
-    let mensaje = document.getElementById("mensaje").value;
-    let destinatario = document.getElementById("direccion").value;
-    let notif = (
-      <div className="alert alert alert-success" role="alert">
-        <div className="mb-2 text-muted">Para: {destinatario}</div>
-        <hr></hr>
-        <div className="font-weight-bold">{mensaje}</div>
+    let destinatario = "0xfbbe913a5064d5b75607665b7df404ee81fc38147a27ea975da4e07ae73da932";
+    let mensaje = document.getElementById('mensaje').value;
+
+    if (mensaje === "") return;
+
+    allMs.push(
+      <div className="media w-50 ml-auto mb-3" key={"unechat-" + mensaje}>
+        <div className="media-body">
+          <div className="bg-primary rounded py-2 px-3 mb-2">
+            <p className="text-small mb-0 text-white">{mensaje}</p>
+          </div>
+        </div>
       </div>
     );
-    allMs.splice(0, 0, notif);
-    document.getElementById("mensaje").value = "";
-    document.getElementById("direccion").value = "";
-    return this.props.contrato.MSG.addMs(mensaje, destinatario).send();
+
+
+    await this.props.contrato.MSG.sendMsg(mensaje, destinatario).send();
+
+    document.getElementById('mensaje').value = "";
+
+    await this.setState({
+      allMs: allMs,
+    })
+
+    var objDiv = document.getElementById("divu");
+    objDiv.scrollTop = objDiv.scrollHeight;
 
   };
 
   async fetchAccountAddress() {
     const account = await window.tronWeb.trx.getAccount();
     const accountAddress = account.address; // HexString(Ascii)
-     const accountAddressInBase58 = window.tronWeb.address.fromHex(
-       accountAddress
-     ); // Base58
+    const accountAddressInBase58 = window.tronWeb.address.fromHex(
+      accountAddress
+    ); // Base58
 
     this.setState({
       accountAddress: accountAddressInBase58
@@ -124,9 +162,8 @@ export default class MensajeContract extends Component {
           <header className="text-center">
             <h1 className="display-4 text-white">TRON Chat</h1>
             <p className="text-white lead mb-0">Chatea de forma descentralizada</p>
-            <p className="text-white lead mb-4">by
-              <a href="https://brutus.finance" className="text-white">
-                <u>brutus.finance</u></a>
+            <p className="text-white lead mb-4">
+              by <a href="https://brutus.finance" className="text-white"> <u> brutus.finance</u></a>
             </p>
           </header>
 
@@ -141,16 +178,10 @@ export default class MensajeContract extends Component {
 
                 <div className="messages-box">
                   <div className="list-group rounded-0">
-                    <a className="list-group-item list-group-item-action active text-white rounded-0">
-                      <div className="media"><img src="https://bootstrapious.com/i/snippets/sn-chat/avatar.svg" alt="user" width="50" className="rounded-circle" />
-                        <div className="media-body ml-4">
-                          <div className="d-flex align-items-center justify-content-between mb-1">
-                            <h6 className="mb-0">Jason Doe</h6><small className="small font-weight-bold">25 Dec</small>
-                          </div>
-                          <p className="font-italic mb-0 text-small">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore.</p>
-                        </div>
-                      </div>
-                    </a>
+
+                    {this.state.allChats}
+
+
 
 
 
@@ -168,14 +199,14 @@ export default class MensajeContract extends Component {
               </div>
 
 
-              <form action="#" className="bg-light">
+              <div className="bg-light">
                 <div className="input-group">
-                  <input type="text" placeholder="Type a message"  id="mensaje" aria-describedby="button-addon2" className="form-control rounded-0 border-0 py-4 bg-light" />
+                  <input type="text" placeholder="Type a message" id="mensaje" aria-describedby="button-addon2" className="form-control rounded-0 border-0 py-4 bg-light" />
                   <div className="input-group-append">
-                    <button id="button-addon2" type="submit" className="btn btn-link" onClick={() => this.addMs()}> <i className="fa fa-paper-plane"></i></button>
+                    <button id="button-addon2" className="btn btn-link" onClick={() => this.addMs()}> <i className="fa fa-paper-plane"></i></button>
                   </div>
                 </div>
-              </form>
+              </div>
 
             </div>
           </div>

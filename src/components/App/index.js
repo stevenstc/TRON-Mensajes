@@ -1,12 +1,9 @@
 import React, { Component } from "react";
-import TronWeb from "tronweb";
 
-import Utils from "../../utils";
 import ECommerce from "../ECommerce"; 
-import TronLinkInfo from "../TronLinkInfo";
 import TronLinkGuide from "../TronLinkGuide";
 
-const FOUNDATION_ADDRESS = "TWiWt5SEDzaEqS6kE5gandWMNfxR2B5xzg";
+import abiContract from "../../abi/contract-abi.json";
 
 class App extends Component {
   constructor(props) {
@@ -69,12 +66,11 @@ class App extends Component {
 
         //window.tronWeb.setHeader({"TRON-PRO-API-KEY": process.env.REACT_APP_TG_TOKEN});
 
-
-          //window.tronWeb.setHeader({"TRON-PRO-API-KEY": 'b0e8c09f-a9c8-4b77-8363-3cde81365fac'})
-
           contrato = {};
 
-          contrato.MSG = await window.tronWeb.contract().at("TE2Yndwa6HBeqoPscrYfyZnV3gQEdhRLeq");
+          //contrato.MSG = await window.tronWeb.contract().at("TCtMyNKi7HfgcPCSRXMXUqWpndcgzGAt7w");
+
+          contrato.MSG = await window.tronWeb.contract(abiContract,"TCtMyNKi7HfgcPCSRXMXUqWpndcgzGAt7w");
 
           this.setState({
             contrato: contrato
