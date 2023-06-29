@@ -12,6 +12,7 @@ contract MensajeContract{
 
      mapping(uint256=>address)public identificador;
      mapping(address=>bytes32[])_misChats;
+     mapping(address=>bytes32[])_solicitudes;
      mapping(bytes32=>Mensaje[])chats;
      mapping(bytes32=>string) public chatName;
      mapping(bytes32=>bool)public chatActivo;
@@ -19,6 +20,10 @@ contract MensajeContract{
      
      function misChats(address _user)public view returns(bytes32[] memory){
          return _misChats[_user];
+     }
+     
+     function solicitudes(address _user)public view returns(bytes32[] memory){
+         return _solicitudes[_user];
      }
 
      function isListing(address _user, bytes32 _chat) public view returns(bool permiso){
@@ -42,13 +47,18 @@ contract MensajeContract{
 
      function inviteUserChat(address _user,bytes32 _chat) public{
           require(chatActivo[_chat]); 
-          require(isListing(msg.sender,_chat));
-          lista[_chat][0] = msg.sender;
+          require(lista[_chat][0] == msg.sender);
           lista[_chat].push(_user);
+          _solicitudes[_user].push(_chat);
      }
      
      function deleteChat(uint256 _index) public {
           delete _misChats[msg.sender][_index];
+
+     }
+
+     function deleteSolicitud(uint256 _index) public {
+          delete _solicitudes[msg.sender][_index];
 
      }
 
@@ -57,30 +67,26 @@ contract MensajeContract{
         bytes32 chatN = keccak256(abi.encodePacked(msg.sender,block.timestamp));
         chatActivo[chatN] = true;
         lista[chatN].push(msg.sender);
-        if(_lista.length>1){
-            for (uint256 index = 0; index < _lista.length; index++) {
-                lista[chatN].push(_lista[index]);
-            }
-            
+
+        for (uint256 index = 0; index < _lista.length; index++) {
+            lista[chatN].push(_lista[index]);
+            _solicitudes[_lista[index]].push(chatN);
         }
+        
         _misChats[msg.sender].push(chatN);
         return chatN;
 
      }
      
      function deactiveChat(bytes32 _chat)public {
-
-        require(isListing(msg.sender,_chat));
-        lista[_chat][0] = msg.sender;
+        require(lista[_chat][0] == msg.sender);
         chatActivo[_chat] = false;
         
-
      }
 
      function updateChatName(string memory _nombre,bytes32 _chat) public{
           require(chatActivo[_chat]); 
-          require(isListing(msg.sender,_chat));
-          lista[_chat][0] = msg.sender;
+          require(lista[_chat][0] == msg.sender);
           chatName[_chat] = _nombre;
      }
 

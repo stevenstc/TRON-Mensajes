@@ -1,20 +1,21 @@
 {
   "files": {
-    "main.js": "/TRON-Mensajes/static/js/main.f047f7d6.chunk.js",
-    "main.js.map": "/TRON-Mensajes/static/js/main.f047f7d6.chunk.js.map",
-    "runtime-main.js": "/TRON-Mensajes/static/js/runtime-main.d228b1bd.js",
-    "runtime-main.js.map": "/TRON-Mensajes/static/js/runtime-main.d228b1bd.js.map",
-    "static/js/2.bf097f37.chunk.js": "/TRON-Mensajes/static/js/2.bf097f37.chunk.js",
-    "static/js/2.bf097f37.chunk.js.map": "/TRON-Mensajes/static/js/2.bf097f37.chunk.js.map",
+    "main.js": "/TRON-Mensajes/static/js/main.b72f8067.chunk.js",
+    "main.js.map": "/TRON-Mensajes/static/js/main.b72f8067.chunk.js.map",
+    "runtime-main.js": "/TRON-Mensajes/static/js/runtime-main.f4b749c7.js",
+    "runtime-main.js.map": "/TRON-Mensajes/static/js/runtime-main.f4b749c7.js.map",
+    "static/js/2.dc34fa06.chunk.js": "/TRON-Mensajes/static/js/2.dc34fa06.chunk.js",
+    "static/js/2.dc34fa06.chunk.js.map": "/TRON-Mensajes/static/js/2.dc34fa06.chunk.js.map",
     "index.html": "/TRON-Mensajes/index.html",
-    "precache-manifest.ffc5b6482d9dbd3ece98170b939e5cac.js": "/TRON-Mensajes/precache-manifest.ffc5b6482d9dbd3ece98170b939e5cac.js",
+    "precache-manifest.afe542c0b111cfe8abcb0239f5ee8031.js": "/TRON-Mensajes/precache-manifest.afe542c0b111cfe8abcb0239f5ee8031.js",
     "service-worker.js": "/TRON-Mensajes/service-worker.js",
-    "static/js/2.bf097f37.chunk.js.LICENSE.txt": "/TRON-Mensajes/static/js/2.bf097f37.chunk.js.LICENSE.txt",
+    "static/js/2.dc34fa06.chunk.js.LICENSE.txt": "/TRON-Mensajes/static/js/2.dc34fa06.chunk.js.LICENSE.txt",
+    "static/js/main.b72f8067.chunk.js.LICENSE.txt": "/TRON-Mensajes/static/js/main.b72f8067.chunk.js.LICENSE.txt",
     "static/media/TronLinkLogo.png": "/TRON-Mensajes/static/media/TronLinkLogo.d3a8f115.png"
   },
   "entrypoints": [
-    "static/js/runtime-main.d228b1bd.js",
-    "static/js/2.bf097f37.chunk.js",
-    "static/js/main.f047f7d6.chunk.js"
+    "static/js/runtime-main.f4b749c7.js",
+    "static/js/2.dc34fa06.chunk.js",
+    "static/js/main.b72f8067.chunk.js"
   ]
 }

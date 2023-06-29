@@ -70,7 +70,7 @@ class App extends Component {
 
           //contrato.MSG = await window.tronWeb.contract().at("TCtMyNKi7HfgcPCSRXMXUqWpndcgzGAt7w");
 
-          contrato.MSG = await window.tronWeb.contract(abiContract,"TCtMyNKi7HfgcPCSRXMXUqWpndcgzGAt7w");
+          contrato.MSG = await window.tronWeb.contract(abiContract,"TAsoCRZcrQmqjPvMF6YgcLUaMVp7BpiiCc");
 
           this.setState({
             contrato: contrato

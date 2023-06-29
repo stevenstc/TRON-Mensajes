@@ -11,91 +11,167 @@ export default class MensajeContract extends Component {
     };
 
     this.addMs = this.addMs.bind(this);
-    this.getMsMensaje = this.getMsMensaje.bind(this);
+    this.getChats = this.getChats.bind(this);
+    this.loadMessages = this.loadMessages.bind(this);
     this.fetchAccountAddress = this.fetchAccountAddress.bind(this);
+    this.createChat = this.createChat.bind(this);
+    this.copy = this.copy.bind(this);
+    this.joinChat = this.joinChat.bind(this);
+
   }
 
   async componentDidMount() {
     setTimeout(() => {
-      this.getMsMensaje();
+      this.getChats();
     }, 4 * 1000);
     this.fetchAccountAddress();
   };
 
-  async getMsMensaje() {
+  async copy(data){
+    document.getElementById("myInput").value = data;
+    navigator.clipboard.writeText(document.getElementById("myInput").value);
+    alert("Copied!"); 
+
+  }
+
+  async joinChat() {
+    var chat = prompt("Hash to conect");
+    await this.props.contrato.MSG.joinChat(chat).send();
+    this.getChats();
+  }
+
+  async getChats() {
 
     let ms = await this.props.contrato.MSG.misChats(this.props.accountAddress).call();
 
     let allChats = []
 
     allChats.push(
-      <a href={"#createChat"} className="list-group-item list-group-item-action rounded-0">
-        <div className="media"><img src="https://picsum.photos/50?random=999" alt="user" width="50" className="rounded-circle" />
+      <div key={"ear-0"} style={{cursor:"pointer"}} onClick={()=>{this.createChat()}} className="list-group-item list-group-item-action rounded-0">
+        <div className="media"><img src="https://picsum.photos/50?random=9999" alt="user" width="50" className="rounded-circle" />
           <div className="media-body ml-4">
             <div className="d-flex align-items-center justify-content-between mb-1">
               <h6 className="mb-0">Create Chat</h6>
             </div>
-            <p className="font-italic mb-0 text-small">{'["adress","adress"]'}</p>
+            <p className="font-italic mb-0 text-small">adress,adress</p>
           </div>
         </div>
-      </a>
+      </div>
+    )
+
+    allChats.push(
+      <div key={"ear-1"} style={{cursor:"pointer"}} onClick={()=>{this.joinChat()}} className="list-group-item list-group-item-action rounded-0">
+        <div className="media"><img src="https://picsum.photos/50?random=999" alt="user" width="50" className="rounded-circle" />
+          <div className="media-body ml-4">
+            <div className="d-flex align-items-center justify-content-between mb-1">
+              <h6 className="mb-0">Join Chat</h6>
+            </div>
+            <p className="font-italic mb-0 text-small">0x235795c75...382b667ad4</p>
+          </div>
+        </div>
+      </div>
     )
 
     for (let index = 0; index < ms.length; index++) {
+
+      let chatName = await this.props.contrato.MSG.chatName(ms[index]).call();
+
+      if(chatName===""){chatName = (<div onClick={()=>{alert("updating name")}}>{(ms[index]).slice(0,7)+"..."+(ms[index]).slice(-5)}</div>)}
       allChats.push(
-        <a href={"#"+ms[index]} className="list-group-item list-group-item-action active text-white rounded-0">
+        <div key={"mensajes-"+(index+1)} style={{cursor:"pointer"}} onClick={()=>{ this.loadMessages(ms[index]) }} className="list-group-item list-group-item-action active text-white rounded-0">
           <div className="media"><img src={"https://picsum.photos/50?random="+index} alt="user" width="50" className="rounded-circle" />
             <div className="media-body ml-4">
               <div className="d-flex align-items-center justify-content-between mb-1">
-                <h6 className="mb-0">Chat name</h6>
+                <h6 className="mb-0">{chatName}</h6><small className="small font-weight-bold"><button onClick={()=>{this.copy(ms[index])}} className="btn btn-success">Link hash</button></small>
               </div>
-              <p className="font-italic mb-0 text-small">{ms[index]}</p>
+              <p className="font-italic mb-0 text-small"></p>
             </div>
           </div>
-        </a>
+        </div>
       )
 
     }
 
-    await this.setState({
+    this.setState({
       allChats: allChats
     })
 
+  };
+
+  async loadMessages(selectedChat){
+
+    if(selectedChat === "" ) return;
+
+    this.setState({selectedChat: selectedChat})
+
     let array = []
-    if(ms.length>=1){
-      array = await this.props.contrato.MSG.getMsgChats(ms[0]).call();
+
+    if(selectedChat !== ""){
+      array = await this.props.contrato.MSG.getMsgChats(selectedChat).call();
 
     }
 
     let allMs = []
 
+    let lastMs = "";
+
     for (let i = 0; i < array.length; i++) {
 
-      if (window.tronWeb.address.fromHex(array[i][1]) === this.props.accountAddress) {
-        allMs.push(
-          <div className="media w-50 ml-auto mb-3" key={"unechat-" + i}>
-            <div className="media-body">
-              <div className="bg-primary rounded py-2 px-3 mb-2">
-                <p className="text-small mb-0 text-white">{array[i][0]}</p>
+      let user = window.tronWeb.address.fromHex(array[i][1]);
+
+      
+      if (user === this.props.accountAddress) {
+        if( lastMs === user ){
+          allMs.push(
+            <div className="media w-50 ml-auto" key={"unechat-" + i}>
+              <div className="media-body">
+                <div className="bg-primary rounded py-2 px-3 mb-2">
+                  <p className="text-small mb-0 text-white">{array[i][0]}</p>
+                </div>
               </div>
             </div>
-          </div>
-        );
+          );
+        }else{
+          allMs.push(
+            <div className="media w-50 ml-auto mt-3" key={"unechat-" + i}>
+              <div className="media-body">
+                <div className="bg-primary rounded py-2 px-3 mb-2">
+                  <p className="text-small mb-0 text-white">{array[i][0]}</p>
+                </div>
+              </div>
+            </div>
+          );
+        }
       } else {
-        allMs.push(
-          <div className="media w-50 mb-3" key={"unechatAns-" + i}><img src={"https://picsum.photos/50?random="+i} alt="user" width="50" className="rounded-circle" />
-            <div className="media-body ml-3">
-              <p className="small text-muted">{window.tronWeb.address.fromHex(array[i][1])}</p>
-              <div className="bg-light rounded py-2 px-3 mb-2">
-                <p className="text-small mb-0 text-muted">{array[i][0]}</p>
+        if( lastMs === user ){
+          allMs.push(
+            <div className="media w-50" key={"unechatAns-" + i}>
+              <div className="media-body ml-3">
+                <div className="bg-light rounded py-2 px-3 mb-2">
+                  <p className="text-small mb-0 text-muted">{array[i][0]}</p>
+                </div>
               </div>
             </div>
-          </div>
-        );
+          );
+        }else{
+          allMs.push(
+            <div className="media w-50 mt-3" key={"unechatAns-" + i}><img src={"https://picsum.photos/50?random="+i} alt="user" width="50" className="rounded-circle" />
+              <div className="media-body ml-3">
+                <p className="small text-muted">{window.tronWeb.address.fromHex(array[i][1])}</p>
+                <div className="bg-light rounded py-2 px-3 mb-2">
+                  <p className="text-small mb-0 text-muted">{array[i][0]}</p>
+                </div>
+              </div>
+            </div>
+          );
+
+        }
       }
+      
 
+      lastMs = user
 
-      await this.setState({
+      this.setState({
         allMs: allMs
       })
 
@@ -104,42 +180,35 @@ export default class MensajeContract extends Component {
 
     }
 
+    this.setState({
+      allMs: allMs
+    })
     
-
-  };
+  }
 
 
   async addMs() {
-    var { allMs } = this.state;
 
-    let destinatario = "0xfbbe913a5064d5b75607665b7df404ee81fc38147a27ea975da4e07ae73da932";
+    let destinatario = this.state.selectedChat;
     let mensaje = document.getElementById('mensaje').value;
 
     if (mensaje === "") return;
-
-    allMs.push(
-      <div className="media w-50 ml-auto mb-3" key={"unechat-" + mensaje}>
-        <div className="media-body">
-          <div className="bg-primary rounded py-2 px-3 mb-2">
-            <p className="text-small mb-0 text-white">{mensaje}</p>
-          </div>
-        </div>
-      </div>
-    );
-
+    if (destinatario === ""){ alert("selecct a chat");return}
 
     await this.props.contrato.MSG.sendMsg(mensaje, destinatario).send();
 
     document.getElementById('mensaje').value = "";
 
-    await this.setState({
-      allMs: allMs,
-    })
-
-    var objDiv = document.getElementById("divu");
-    objDiv.scrollTop = objDiv.scrollHeight;
+    this.loadMessages(destinatario);
 
   };
+
+  async createChat(){
+    var destinatario = prompt("Adress from other user")
+
+    await this.props.contrato.MSG.createChat([destinatario]).send();
+
+  }
 
   async fetchAccountAddress() {
     const account = await window.tronWeb.trx.getAccount();
@@ -181,10 +250,6 @@ export default class MensajeContract extends Component {
 
                     {this.state.allChats}
 
-
-
-
-
                   </div>
                 </div>
               </div>
@@ -212,23 +277,9 @@ export default class MensajeContract extends Component {
           </div>
         </div>
 
-        <button className="btn btn-primary" onClick={() => this.getMsMensaje()}>Ver mis Mensajes</button>
+        <button className="btn btn-primary" onClick={() => this.loadMessages(this.state.selectedChat)}>Cargar Mensajes</button>
+        <input type="text" value="Hello World" id="myInput" hidden />
 
-        <div className="eCommerce-component-container">
-
-          <form action="" className="alert alert-success">
-            <div className="form-group">
-              <label htmlFor="exampleFormControlTextarea1">Dirección</label>
-              <textarea className="form-control" id="direccion" rows="1" placeholder="TB7.......r4XvF"></textarea>
-            </div>
-            <div className="form-group">
-              <button className="btn btn-success" type="button" onClick={() => this.addMs()}>Enviar</button>
-              Costo aproximado: 106420 Energía + 412 Ancho de Banda
-            </div>
-          </form>
-
-
-        </div>
       </>
     );
   }
