@@ -1,4 +1,21 @@
-import React, { Component } from "react";
+import React, { Component } from "react";  
+const CryptoJS = require('crypto-js');
+
+function delay(s){
+	return new Promise(resolve => setTimeout(resolve, s*1000));
+}
+
+function encryptString(s){
+  var key = CryptoJS.enc.Utf8.parse(process.env.REACT_APP_ENCODE_APLICATION); 
+  var encrypted =  CryptoJS.AES.encrypt(s, key, {mode:CryptoJS.mode.ECB});
+  return encrypted.toString()
+}
+
+function decryptString(s){
+  var key = CryptoJS.enc.Utf8.parse(process.env.REACT_APP_ENCODE_APLICATION); 
+  var decrypted =  CryptoJS.AES.decrypt(s, key, {mode:CryptoJS.mode.ECB});
+  return decrypted.toString(CryptoJS.enc.Utf8)
+}
 
 export default class MensajeContract extends Component {
   constructor(props) {
@@ -17,6 +34,7 @@ export default class MensajeContract extends Component {
     this.createChat = this.createChat.bind(this);
     this.copy = this.copy.bind(this);
     this.joinChat = this.joinChat.bind(this);
+    this.renderText = this.renderText.bind(this);
 
   }
 
@@ -27,7 +45,34 @@ export default class MensajeContract extends Component {
     this.fetchAccountAddress();
   };
 
-  async copy(data){
+  renderText(text) {
+    let parts = text.split(/(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#/%?=~_|!:,.;]*[-A-Z0-9+&@#/%=~_|])/ig) // re is a matching regular expression
+    console.log(parts)
+    for (let i = 0; i < parts.length; i ++) {
+      let x = true;
+      if(parts[i] === "") {
+        delete parts[i]
+        x = false
+      }
+      if(parts[i] === "http") {
+        delete parts[i]
+        x = false
+      }
+      if(parts[i] === "https") {
+        delete parts[i]
+        x = false
+      }
+
+      if(x && (parts[i]).search("https://") >= 0){
+        parts[i] = <a key={'link' + i} style={{color:"gray",backgroundColor: "#FFF"}} href={parts[i]} target="_blank" rel="noopener noreferrer">{parts[i]}</a>
+
+      }
+
+    }
+    return parts
+  }
+
+  copy(data){
     document.getElementById("myInput").value = data;
     navigator.clipboard.writeText(document.getElementById("myInput").value);
     alert("Copied!"); 
@@ -76,7 +121,7 @@ export default class MensajeContract extends Component {
 
       let chatName = await this.props.contrato.MSG.chatName(ms[index]).call();
 
-      if(chatName===""){chatName = (<div onClick={()=>{alert("updating name")}}>{(ms[index]).slice(0,7)+"..."+(ms[index]).slice(-5)}</div>)}
+      if(chatName===""){chatName = (<div onClick={async()=>{let up = prompt("updating name to",""); if(up !== null) await this.props.contrato.MSG.updateChatName(up,ms[index]).send(); this.allChats() }}>{(ms[index]).slice(0,7)+"..."+(ms[index]).slice(-7)}</div>)}
       allChats.push(
         <div key={"mensajes-"+(index+1)} style={{cursor:"pointer"}} onClick={()=>{ this.loadMessages(ms[index]) }} className="list-group-item list-group-item-action active text-white rounded-0">
           <div className="media"><img src={"https://picsum.photos/50?random="+index} alt="user" width="50" className="rounded-circle" />
@@ -119,6 +164,9 @@ export default class MensajeContract extends Component {
 
       let user = window.tronWeb.address.fromHex(array[i][1]);
 
+      let mensaje = decryptString(array[i][0]);
+
+      mensaje = this.renderText(mensaje)
       
       if (user === this.props.accountAddress) {
         if( lastMs === user ){
@@ -126,7 +174,7 @@ export default class MensajeContract extends Component {
             <div className="media w-50 ml-auto" key={"unechat-" + i}>
               <div className="media-body">
                 <div className="bg-primary rounded py-2 px-3 mb-2">
-                  <p className="text-small mb-0 text-white">{array[i][0]}</p>
+                  <p className="text-small mb-0 text-white">{mensaje}</p>
                 </div>
               </div>
             </div>
@@ -136,7 +184,7 @@ export default class MensajeContract extends Component {
             <div className="media w-50 ml-auto mt-3" key={"unechat-" + i}>
               <div className="media-body">
                 <div className="bg-primary rounded py-2 px-3 mb-2">
-                  <p className="text-small mb-0 text-white">{array[i][0]}</p>
+                  <p className="text-small mb-0 text-white">{mensaje}</p>
                 </div>
               </div>
             </div>
@@ -148,7 +196,7 @@ export default class MensajeContract extends Component {
             <div className="media w-50" key={"unechatAns-" + i}>
               <div className="media-body ml-3">
                 <div className="bg-light rounded py-2 px-3 mb-2">
-                  <p className="text-small mb-0 text-muted">{array[i][0]}</p>
+                  <p className="text-small mb-0 text-muted">{mensaje}</p>
                 </div>
               </div>
             </div>
@@ -159,7 +207,7 @@ export default class MensajeContract extends Component {
               <div className="media-body ml-3">
                 <p className="small text-muted">{window.tronWeb.address.fromHex(array[i][1])}</p>
                 <div className="bg-light rounded py-2 px-3 mb-2">
-                  <p className="text-small mb-0 text-muted">{array[i][0]}</p>
+                  <p className="text-small mb-0 text-muted">{mensaje}</p>
                 </div>
               </div>
             </div>
@@ -195,7 +243,12 @@ export default class MensajeContract extends Component {
     if (mensaje === "") return;
     if (destinatario === ""){ alert("selecct a chat");return}
 
+    mensaje = encryptString(mensaje);
+
+    console.log(mensaje);
+
     await this.props.contrato.MSG.sendMsg(mensaje, destinatario).send();
+    await delay(3);
 
     document.getElementById('mensaje').value = "";
 
@@ -266,7 +319,7 @@ export default class MensajeContract extends Component {
 
               <div className="bg-light">
                 <div className="input-group">
-                  <input type="text" placeholder="Type a message" id="mensaje" aria-describedby="button-addon2" className="form-control rounded-0 border-0 py-4 bg-light" />
+                  <input type="text" placeholder="Type a message" maxlength="300" id="mensaje" aria-describedby="button-addon2" className="form-control rounded-0 border-0 py-4 bg-light" />
                   <div className="input-group-append">
                     <button id="button-addon2" className="btn btn-link" onClick={() => this.addMs()}> <i className="fa fa-paper-plane"></i></button>
                   </div>
